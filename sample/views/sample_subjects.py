@@ -8,10 +8,58 @@ from sample.functions.rest_framework import BaseAPIView
 
 class SampleSubjectAPI(BaseAPIView):
     """
-    API endpoint for sample subjects with caching, throttling, and filtering
+    API endpoint for retrieving subject information with caching, throttling, and filtering.
+    
+    This endpoint provides access to all subject data including subject names and codes.
+    Results are cached for 15 minutes to improve performance. The endpoint supports
+    searching, ordering, and pagination functionality.
+    
+    Throttling:
+        - Anonymous users: 60 requests per hour
+        - Authenticated users: Default DRF rate limits
+    
+    Filtering:
+        Supports filtering by subject name or code through search parameter.
+    
+    Ordering:
+        Supports ordering results through the ordering parameter.
+    
+    Pagination:
+        Supports page-based pagination through query parameters.
     """
 
     def get(self, request):
+        """
+        Retrieve a list of all subjects with their names and codes.
+        
+        Parameters:
+            request (Request): The HTTP request object containing query parameters
+                - search (str, optional): Search term to filter subjects by name or code
+                - ordering (str, optional): Field to order results by (e.g., 'name', '-name', 'subject_code')
+                - page_size (int, optional): Number of results per page
+                - page (int, optional): Page number to retrieve
+        
+        Returns:
+            Response: A JSON response containing:
+                - subjects (list): List of subject objects with the following fields:
+                    - name (str): The subject name
+                    - subject_code (str): The subject code
+        
+        Example Response:
+            {
+                "subjects": [
+                    {
+                        "name": "Mathematics",
+                        "subject_code": "MATH"
+                    },
+                    {
+                        "name": "English",
+                        "subject_code": "ENG"
+                    },
+                    ...
+                ]
+            }
+        """
         cache_key = f"subjects_{request.META['QUERY_STRING']}"
 
         cached_data = cache.get(cache_key)

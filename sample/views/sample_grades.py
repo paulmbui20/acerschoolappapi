@@ -9,7 +9,52 @@ from sample.functions.rest_framework import BaseAPIView
 
 
 class SampleGradeAPI(BaseAPIView):
+    """
+    API endpoint for retrieving grade information with caching, throttling, and filtering.
+    
+    This endpoint provides access to all grade data including grade letters, score ranges,
+    points, and comments. Results are cached for 15 minutes to improve performance.
+    
+    Throttling:
+        - Anonymous users: 60 requests per hour
+        - Authenticated users: Default DRF rate limits
+    
+    Pagination:
+        Supports page-based pagination through query parameters.
+    """
+    
     def get(self, request):
+        """
+        Retrieve a list of all grades with their score ranges, points, and comments.
+        
+        Parameters:
+            request (Request): The HTTP request object containing query parameters
+                - page_size (int, optional): Number of results per page
+                - page (int, optional): Page number to retrieve
+        
+        Returns:
+            Response: A JSON response containing:
+                - overall_grades (list): List of grade objects with the following fields:
+                    - grade_letter (str): The letter grade (e.g., 'A', 'B+', 'C')
+                    - min_score (float): Minimum score required for this grade
+                    - max_score (float): Maximum score for this grade
+                    - points (int): Points awarded for this grade
+                    - comment (str): Descriptive comment for this grade
+        
+        Example Response:
+            {
+                "overall_grades": [
+                    {
+                        "grade_letter": "A",
+                        "min_score": 80.0,
+                        "max_score": 100.0,
+                        "points": 12,
+                        "comment": "Excellent"
+                    },
+                    ...
+                ]
+            }
+        """
         cache_key = f"grades_{request.META['QUERY_STRING']}"
 
         cached_data = cache.get(cache_key)
