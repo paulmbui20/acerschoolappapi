@@ -155,10 +155,3 @@ AcerSchoolAppAPI/
 └── requirements.txt        # Python dependencies
 ```
 
-## License
-
-[Specify your license here]
-
-## Contributors
-
-[List of contributors]
