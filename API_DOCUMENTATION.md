@@ -278,7 +278,3 @@ GET /sample/kcse-papers/
 3. **Versioning**: Implement API versioning to ensure backward compatibility
 4. **Documentation**: Integrate Swagger/OpenAPI for interactive API documentation
 5. **Filtering**: Enhance filtering capabilities with more advanced query parameters
-
-## Support
-
-For questions or issues related to the API, please contact [support email or contact information].
