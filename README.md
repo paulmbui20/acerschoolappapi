@@ -28,11 +28,11 @@ This API provides endpoints for accessing and managing educational data, specifi
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/paulmbui20/acerschoolappapi.git
    cd AcerSchoolAppAPI
    ```
 
-2. Create a `.env-docker` file in the project root with the following variables:
+2. Create a `.env` file in the project root with the following variables:
    ```
    DJANGO_SECRET_KEY=your_secret_key
    DEBUG=True
@@ -56,13 +56,13 @@ This API provides endpoints for accessing and managing educational data, specifi
    docker-compose up
    ```
 
-4. The API will be available at http://localhost:8000/
+4. The API will be available at http://localhost:8005/
 
 ### Local Development Setup
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/paulmbui20/acerschoolappapi.git
    cd AcerSchoolAppAPI
    ```
 
@@ -77,8 +77,7 @@ This API provides endpoints for accessing and managing educational data, specifi
    pip install -r requirements.txt
    ```
 
-4. Create a `.env` file in the project root with the necessary environment variables (similar to `.env-docker` but with appropriate local settings).
-
+4. Create a `.env` file in the project root with the necessary environment variables
 5. Run migrations:
    ```bash
    python manage.py makemigrations
