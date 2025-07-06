@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
     #my custom apps
     'sample',
+    'analytics',
 ]
 
 MIDDLEWARE = [
@@ -100,11 +101,6 @@ DATABASES = {
             'PASSWORD': os.getenv('DB_PASSWORD'),
             'HOST': os.getenv('DB_HOST'),
             'PORT': os.getenv('DB_PORT'),
-            'OPTIONS': {
-                'connect_timeout': 30,  # Increased timeout for schema operations
-                'options': '-c statement_timeout=60000'
-            },
-            'CONN_MAX_AGE': 0,  # Close connections immediately to avoid schema issues
         }
     }
 
@@ -155,7 +151,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 STORAGES = {
-    # ...
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
@@ -182,3 +177,8 @@ CACHES = {
         }
     }
 }
+
+
+
+# docker compose -f 'compose.yaml' up -d --build
+# docker compose watch

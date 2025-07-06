@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 
 class CustomThrottle(AnonRateThrottle):
     scope = 'custom'
-    rate = '60/hour'
+    rate = '30/hour'
 
 
 class BaseAPIView(APIView):

@@ -2,14 +2,8 @@ services:
   db:
     image: postgres:15-alpine
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_HOST_AUTH_METHOD: trust
-      POSTGRES_INITDB_ARGS: --encoding=UTF8
     env_file:
-      - .env
+      - .env.docker
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
@@ -42,10 +36,8 @@ services:
       args:
         PYTHON_VERSION: ${PYTHON_VERSION:-3.13.0}
         UID: ${UID:-10001}
-    environment:
-      DB_HOST: db
     env_file:
-      - .env
+      - .env.docker
     depends_on:
       db:
         condition: service_healthy
