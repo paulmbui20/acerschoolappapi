@@ -1,3 +1,5 @@
+fastapi/
+
 # Django #
 *.log
 *.pot

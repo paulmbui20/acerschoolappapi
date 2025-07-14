@@ -1,4 +1,3 @@
-from django.core.cache import cache
 from rest_framework import status
 
 from rest_framework.response import Response
@@ -55,11 +54,6 @@ class SampleGradeAPI(BaseAPIView):
                 ]
             }
         """
-        cache_key = f"grades_{request.META['QUERY_STRING']}"
-
-        cached_data = cache.get(cache_key)
-        if cached_data:
-            return Response(cached_data, status=status.HTTP_200_OK)
 
         overall_grades = SampleGrade.objects.all()
 
@@ -82,7 +76,4 @@ class SampleGradeAPI(BaseAPIView):
                 'grade_letter', 'min_score', 'max_score', 'points', 'comment'
             )),
         }
-
-        cache.set(cache_key, response_data, timeout=60 * 15)
-
         return Response(response_data, status=status.HTTP_200_OK)

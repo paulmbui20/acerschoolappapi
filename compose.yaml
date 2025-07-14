@@ -15,10 +15,16 @@ services:
     networks:
       - backend
 
+
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    command: ["redis-server", "--appendonly", "yes"]
+    command: [
+      "redis-server",
+      "--appendonly", "yes",
+      "--maxmemory", "512mb",
+      "--maxmemory-policy", "allkeys-lru"
+    ]
     volumes:
       - redis_data:/data
     networks:
@@ -38,6 +44,8 @@ services:
         UID: ${UID:-10001}
     env_file:
       - .env
+    volumes:
+      - ./exports:/app/exports:ro
     depends_on:
       db:
         condition: service_healthy
@@ -49,6 +57,14 @@ services:
       - backend
     command: ["./build.sh"]
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
 volumes:
   db_data:
