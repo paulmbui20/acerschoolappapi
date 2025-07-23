@@ -163,7 +163,7 @@ redis_password = os.getenv('REDIS_PASSWORD', '')
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"{redis_url}",
+        "LOCATION": f"{redis_url}/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": redis_password if redis_password else None,
