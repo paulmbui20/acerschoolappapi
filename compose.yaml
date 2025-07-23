@@ -57,14 +57,6 @@ services:
       - backend
     command: ["./build.sh"]
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '1.5'
-          memory: 2G
-        reservations:
-          cpus: '0.5'
-          memory: 512M
 
 volumes:
   db_data:
