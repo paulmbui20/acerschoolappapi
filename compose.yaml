@@ -3,7 +3,7 @@ services:
     image: postgres:15-alpine
     restart: unless-stopped
     env_file:
-      - .env
+      - .env.docker
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
@@ -43,7 +43,7 @@ services:
         PYTHON_VERSION: ${PYTHON_VERSION:-3.13.0}
         UID: ${UID:-10001}
     env_file:
-      - .env
+      - .env.docker
     volumes:
       - ./exports:/app/exports:ro
     depends_on:
