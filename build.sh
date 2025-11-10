@@ -9,6 +9,12 @@ python manage.py makemigrations
 echo "Applying migrations..."
 python manage.py migrate
 
+echo "Prepopulating learning levels..."
+python manage.py populate_learning_levels
+
+echo "Prepopulating learning areas....."
+python manage.py populate_cbc_learning_areas
+
 # Collect static files
 echo "Collecting static files..."
 python manage.py collectstatic --noinput

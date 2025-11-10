@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     #my custom apps
     'sample',
     'analytics',
+    'cbc.apps.CbcConfig',
 ]
 
 MIDDLEWARE = [

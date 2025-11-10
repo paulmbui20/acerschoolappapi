@@ -1,6 +1,7 @@
 # Acer School App API Documentation
 
-This document provides detailed information about the API endpoints, request formats, response structures, and examples for the Acer School App API.
+This document provides detailed information about the API endpoints, request formats, response structures, and examples
+for the Acer School App API.
 
 ## Base URL
 
@@ -14,16 +15,19 @@ When deployed, replace `localhost:8000` with your actual domain.
 
 ## Authentication
 
-Currently, the API implements rate limiting but does not require authentication for read operations. The API uses Django REST Framework's built-in throttling mechanisms:
+Currently, the API implements rate limiting but does not require authentication for read operations. The API uses Django
+REST Framework's built-in throttling mechanisms:
 
 - Anonymous users: 60 requests per hour
 - Authenticated users: Default Django REST Framework rate limits
 
 ## Common Response Formats
 
-All API responses are returned in JSON format. Successful responses typically have HTTP status code 200 and contain the requested data.
+All API responses are returned in JSON format. Successful responses typically have HTTP status code 200 and contain the
+requested data.
 
-Error responses include appropriate HTTP status codes (4xx for client errors, 5xx for server errors) and a JSON body with error details.
+Error responses include appropriate HTTP status codes (4xx for client errors, 5xx for server errors) and a JSON body
+with error details.
 
 ## API Endpoints
 
@@ -35,10 +39,10 @@ Retrieve a list of all grades with their score ranges, points, and comments.
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Parameter | Type | Required | Description                |
+|-----------|------|----------|----------------------------|
 | page_size | int  | No       | Number of results per page |
-| page      | int  | No       | Page number |
+| page      | int  | No       | Page number                |
 
 **Response:**
 
@@ -58,8 +62,7 @@ Retrieve a list of all grades with their score ranges, points, and comments.
       "max_score": 79.9,
       "points": 11,
       "comment": "Very Good"
-    },
-    // Additional grades...
+    }
   ]
 }
 ```
@@ -72,11 +75,11 @@ Retrieve a list of all subjects with their codes and names.
 
 **Query Parameters:**
 
-| Parameter | Type   | Required | Description |
-|-----------|--------|----------|-------------|
+| Parameter | Type   | Required | Description                                        |
+|-----------|--------|----------|----------------------------------------------------|
 | search    | string | No       | Search term for filtering subjects by name or code |
-| page_size | int    | No       | Number of results per page |
-| page      | int    | No       | Page number |
+| page_size | int    | No       | Number of results per page                         |
+| page      | int    | No       | Page number                                        |
 
 **Response:**
 
@@ -90,8 +93,7 @@ Retrieve a list of all subjects with their codes and names.
     {
       "subject_code": "ENG",
       "name": "English"
-    },
-    // Additional subjects...
+    }
   ]
 }
 ```
@@ -122,8 +124,7 @@ Retrieve all KCSE subjects with their associated papers, including paper names, 
           "percentage_weight": 50.0
         }
       ]
-    },
-    // Additional subjects with their papers...
+    }
   ]
 }
 ```
@@ -148,7 +149,8 @@ Error response format:
 
 ## Caching
 
-The API implements Redis caching to improve performance. Responses are cached for 15 minutes with cache invalidation based on request parameters.
+The API implements Redis caching to improve performance. Responses are cached for 15 minutes with cache invalidation
+based on request parameters.
 
 Cache headers are included in the response to indicate cache status:
 
@@ -157,11 +159,14 @@ Cache headers are included in the response to indicate cache status:
 
 ## Performance Considerations
 
-1. **Use Pagination**: For endpoints that return potentially large datasets, use the `page` and `page_size` parameters to limit the amount of data returned.
+1. **Use Pagination**: For endpoints that return potentially large datasets, use the `page` and `page_size` parameters
+   to limit the amount of data returned.
 
-2. **Efficient Filtering**: Use the `search` parameter to filter results on the server side rather than retrieving all data and filtering client-side.
+2. **Efficient Filtering**: Use the `search` parameter to filter results on the server side rather than retrieving all
+   data and filtering client-side.
 
-3. **Caching**: The API implements server-side caching, but consider implementing client-side caching for frequently accessed data that doesn't change often.
+3. **Caching**: The API implements server-side caching, but consider implementing client-side caching for frequently
+   accessed data that doesn't change often.
 
 ## Examples
 
@@ -270,6 +275,197 @@ GET /sample/kcse-papers/
   ]
 }
 ```
+
+---
+
+# CBC Learning Areas & Levels API
+
+This module provides **read-only**, high-performance REST endpoints for Kenya CBC learning areas and learning levels.
+
+Base path for all endpoints:
+
+```
+/cbc/
+```
+
+Caching is enabled for **30 days**, with **automatic invalidation** when data changes.
+
+---
+
+## 1. Learning Areas API
+
+### **GET /cbc/sample/learning-areas/**
+
+Retrieve a paginated list of all CBC learning areas (subjects).
+
+#### Query Parameters
+
+| Parameter | Type | Required | Description              |
+|-----------|------|----------|--------------------------|
+| page      | int  | No       | Page number              |
+| page_size | int  | No       | Number of items per page |
+
+#### Response Example
+
+```json
+{
+  "count": 9,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "name": "English",
+      "code": "ENG"
+    },
+    {
+      "id": 2,
+      "name": "Mathematics",
+      "code": "MATH"
+    }
+  ]
+}
+```
+
+#### Caching
+
+* List response cached for **30 days**.
+* Cache automatically invalidated if any learning area is added, updated, or deleted.
+
+---
+
+### **GET /cbc/sample/learning-areas/{id}/**
+
+Retrieve a single learning area by ID.
+
+#### Path Parameter
+
+| Parameter | Type | Description               |
+|-----------|------|---------------------------|
+| id        | int  | Learning Area database ID |
+
+#### Response Example
+
+```json
+{
+  "id": 5,
+  "name": "Pre-Technical Studies",
+  "code": "PRETECH"
+}
+```
+
+#### Caching
+
+* Each item stored under its own **detail cache key** for 30 days.
+* Invalidated automatically when that object changes.
+
+---
+
+## 2. Learning Levels API
+
+### **GET /cbc/sample/learning-levels/**
+
+Retrieve all CBC learning levels (e.g., Grade 1, Grade 2, etc.).
+
+#### Query Parameters
+
+| Parameter | Type | Required | Description      |
+|-----------|------|----------|------------------|
+| page      | int  | No       | Page number      |
+| page_size | int  | No       | Results per page |
+
+#### Response Example
+
+```json
+{
+  "count": 11,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "name": "Pre-Primary 1"
+    },
+    {
+      "id": 2,
+      "name": "Grade 1"
+    }
+  ]
+}
+```
+
+#### Caching
+
+* 30-day Redis/django cache per endpoint.
+* Auto-invalidated if learning levels change.
+
+---
+
+### **GET /cbc/sample/learning-levels/{id}/**
+
+Retrieve a single learning level by ID.
+
+#### Path Parameter
+
+| Parameter | Type | Description       |
+|-----------|------|-------------------|
+| id        | int  | Level database ID |
+
+#### Response Example
+
+```json
+{
+  "id": 6,
+  "name": "Grade 6"
+}
+```
+
+#### Caching
+
+* Detail cache scoped per object.
+* Automatically invalidated on changes.
+
+---
+
+## Error Handling
+
+Standard error responses are returned:
+
+| Status | Meaning                    |
+|--------|----------------------------|
+| 400    | Invalid request parameters |
+| 404    | Resource not found         |
+| 429    | Too many requests          |
+| 500    | Server error               |
+
+Example response:
+
+```json
+{
+  "error": "Not Found",
+  "detail": "Learning area does not exist."
+}
+```
+
+---
+
+## Performance Notes
+
+1. **Caching (30-days TTL)**
+   All list and detail endpoints are cached for performance; automatic invalidation prevents stale reads.
+
+2. **Optimized ordering**
+   Case-insensitive sorting using `Lower(name)` for stable, predictable output.
+
+3. **Pagination enabled**
+   All list endpoints use global DRF pagination.
+
+4. **Throttling enabled**
+
+    * Anonymous users: 60/hr
+    * Authenticated users: DRF defaults
+
+---
 
 ## Future Enhancements
 
